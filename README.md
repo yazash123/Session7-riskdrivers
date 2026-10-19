@@ -2,7 +2,7 @@
 
 The House of the People "Underlying Drivers" activity, running on its own in place of claude.ai.
 
-- **Live page:** https://yazash123.github.io/session7-riskdrivers/ (room links: add `#g1` to `#g26`)
+- **Live page:** https://yazash123.github.io/Session7-riskdrivers/ (room links: add `#g1` to `#g26`)
 - **In Webflow:** paste `webflow-embed.html` into one Code Embed in a full-width section (not a Container). Room links work on the Webflow address too, for example `…/your-page#g5`.
 
 ## Files
