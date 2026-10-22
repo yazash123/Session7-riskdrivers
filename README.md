@@ -9,13 +9,16 @@ The House of the People "Underlying Drivers" activity, running on its own in pla
 
 | file | what it is |
 |---|---|
-| `index.html` | the page, exactly as published from the claude.ai artifact. Don't hand-edit it; re-export from the artifact instead. |
+| `index.html` | the page: the claude.ai artifact plus the three Firebase script tags. Don't hand-edit it; re-export from the artifact instead. |
+| `firebase-config.js` | the Firebase web config (public). |
 | `webflow-embed.html` | the one Webflow embed. |
 | `.nojekyll` | tells GitHub Pages to serve the page as is. |
 
-## How it differs from Session 5
+## Live sharing (22 Oct)
 
-Nothing needs a backend. This page keeps each person's map in their own browser (`localStorage`), so there is no Firebase config, rules file or build script. The artifact's "Edit text" bar only appears inside claude.ai, so it stays hidden here. To change copy, edit it in the artifact and replace `index.html`.
+Group review is shared live with the room through Firestore (project `session-5-activity`, collection `drv-s6`, set by `DRVBOARD` in `index.html`). There is one document per person per risk, id `<pid>_<risk>`, holding that person's driver-to-risk lines (`str`, `eff`), their own drivers (`o1`, `o2`) and the hearts they gave (`stars`). It is written about a second after their last change, and only once they've drawn something, so someone who only looks is never counted. The page listens to one room at a time, once a Group review opens. Lines between risks (Bonus) stay in the browser. The rules are the `drvPerson` part of `firestore.rules` in the session6-iceberg repo.
+
+`firebase-config.js` is public by design; the rules protect the data. The claude.ai artifact has the same code but no Firebase scripts, so there it stays local. To update: copy the artifact over `index.html`, then put the three Firebase script tags back just above `<script id="app">`.
 
 ## Publishing
 
