@@ -1314,7 +1314,7 @@ var DEF={
  'mast.eyebrow':'Sessions 6 & 7 · Connecting drivers','mast.title':'connecting *drivers*','mast.risks':'Our risk:','mast.none':'Choose your room','mast.room':'Room',
  'step.setup':'Set up','step.drivers':'the drivers','step.draw':'Connecting drivers','step.look':'look back','step.together':'together',
  'phase.solo':'On your own','phase.together':'Together',
- 'time.solo':'15',
+ 'time.solo':'10',
  'timer.start':'Start the timer','timer.pause':'Pause the timer','timer.resume':'Carry on with the timer','timer.reset':'Reset the timer','timer.done':'Time’s up',
  'demo.text':'An example room: five imaginary people and you.','demo.clear':'Leave the example',
  'setup.tag':'Before you start','setup.q':'Which risks is your room working on?',
@@ -1474,7 +1474,7 @@ var DEF={
  'next.move':'Move on to the next risk','next.movea':'Move on to the next risk: {r}','next.movef':'Move on to the next risk →',
  'draw.start':'Start here','draw.fold':'Fold this away','draw.unfold':'Show what to do','draw.head':'Connect the drivers to the risk',
  'draw.steps':'*Steps*\n*1.* Read your full risk description.\n*2.* Read the driver descriptions.\n*3.* Think about which drivers are connected to the risk, and drag them onto it.\n*4.* Add your own drivers that aren’t on the list.\n*5.* Talk about it with your group.',
- 'draw.times':'*Timings* (45 minutes in all)\n*First risk:* 15 minutes reading and drawing lines quietly, then 15 minutes talking.\n*Second risk:* 5 minutes thinking, then 10 minutes talking.',
+ 'draw.times':'*Timings* (45 minutes in all)\n*First risk:* 10 minutes reading and drawing lines quietly, then 12 minutes talking.\n*Second risk:* 10 minutes reading and drawing lines quietly, then 13 minutes talking.',
  'phase.solo2':'On your own','phase.together2':'Together',
  /* October 23: five lines of what to do, in the white panel. _underscores_ make a word italic there */
  'draw.do1':'*To connect:* click a red driver and drag it onto the risk in the middle. On a tablet or phone, tap the driver, then tap the risk.',
@@ -1487,7 +1487,7 @@ var DEF={
  'live.fail':'That didn’t save. Check your connection and try again.'
 };
 var MULTI={'together.prompts':1,'draw.steps':1,'draw.times':1,'draw.help':1,'drvf.D1':1,'drvx.D1':1,'drvf.D2':1,'drvx.D2':1,'drvf.D3':1,'drvx.D3':1,'drvf.D4':1,'drvx.D4':1,'drvf.D5':1,'drvx.D5':1,'drvf.D6':1,'drvx.D6':1,'drvf.D7':1,'drvx.D7':1};
-var HINTS={'mast.title':'*Asterisks* set a word in the bold sans-serif, as on the Iceberg page.','draw.do2':'_Underscores_ make a word italic. *Asterisks* make it bold.','time.solo':'Minutes on your own for the first risk, as a number. Talking time is the same. The second risk gets a third of this on your own and two thirds talking.','together.prompts':'Each line is a separate prompt.'};
+var HINTS={'mast.title':'*Asterisks* set a word in the bold sans-serif, as on the Iceberg page.','draw.do2':'_Underscores_ make a word italic. *Asterisks* make it bold.','time.solo':'Minutes on your own for each risk, as a number. Talking is 2 minutes more than this for the first risk and 3 more for the second.','together.prompts':'Each line is a separate prompt.'};
 
 var CLUSTERS=[
  {id:'data',risks:['R06','R08']},{id:'voters',risks:['R01','R02']},{id:'kids',risks:['R03','R15']},
@@ -1514,7 +1514,7 @@ function bold(h){return h.replace(/\*([^*\n]+)\*/g,'<b>$1</b>');}
 function plain(k,v){return fill(raw(k),v).replace(/\*([^*\n]+)\*/g,'$1');}
 function rich(k,v){return bold(esc(fill(raw(k),v))).replace(/\n/g,'<br>');}
 function T(tag,k,attrs,v){var e=el(tag,attrs);e.setAttribute('data-copy',k);e.innerHTML=rich(k,v);return e;}
-function mins(){var m=parseInt(raw('time.solo'),10);return m>0&&m<121?m:15;}
+function mins(){var m=parseInt(raw('time.solo'),10);return m>0&&m<121?m:10;}
 function TV(){return {m:mins(),m2:mins()*2};}
 function plural(n){return n===1?'':'s';}
 
@@ -4184,9 +4184,10 @@ function roomOpenAt(i){if(S.example||S.finished)return true;var r=stepRisk(i);re
 function roomOpen(){return roomOpenAt(S.step);}
 function markFinished(){var r=focusRisk();if(!r)return;if(!S.fin)S.fin={};if(!S.fin[r]){S.fin[r]=true;save();}}
 function linesFor(r){var m=S.maps['r'+S.room+'-'+r];if(!m)return 0;return m.lines.filter(function(l){if(l.ex)return false;var d=l.a===r?l.b:(l.b===r?l.a:null);if(!d)return false;var k=kindOf(d);return k==='drv'||(k==='own'&&!!(m.own||{})[d]);}).length;}
-/* the timer (October 24: 45 minutes in all): first risk 15 minutes on your own, then 15 talking;
-   second risk 5 on your own, then 10 talking. The first-risk minutes set the rest (a third and two thirds of them). */
-function dur(ph){var m=mins();return (ph==='solo2'?Math.max(1,Math.round(m/3)):ph==='together2'?Math.max(1,Math.round(m*2/3)):m)*60000;}
+/* the timer (October 24, afternoon: 45 minutes in all, the two risks about equal):
+   each risk 10 minutes on your own; then 12 minutes talking for the first risk and 13 for the second.
+   The on-your-own minutes come from 'time.solo'; talking is 2 and 3 minutes more than that. */
+function dur(ph){var m=mins();return (ph==='together'?m+2:ph==='together2'?m+3:m)*60000;}
 
 /* the tabs: Set up · Risk 1: Connecting drivers, Group review · Risk 2: Connecting drivers, Group review · Bonus */
 function renderSteps(){
