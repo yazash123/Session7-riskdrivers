@@ -1110,7 +1110,12 @@ body.st-stage{--field:#1C3150}
 /* the white panel: bigger, a "Start here" label, then what to do */
 .st-guide{padding:28px 26px 22px;gap:12px;box-shadow:0 16px 40px rgba(0,0,0,.34)}
 .st-guide .gstart{position:absolute;top:-14px;left:22px;background:#E0C060;color:#0A0A0A;font-size:12.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:6px 11px;line-height:1.2;box-shadow:0 4px 12px rgba(0,0,0,.25)}
-.st-guide .gh{align-items:center}
+.st-guide .gh{align-items:center;gap:8px}
+.st-guide .gfold svg{transition:transform .2s}
+.st-guide.folded .gfold svg{transform:rotate(180deg)}
+.st-guide.folded{padding-top:22px;padding-bottom:16px}
+.st-guide.folded .gt{font-size:clamp(18px,.8rem + .4vw,22px)}
+@media(prefers-reduced-motion:reduce){.st-guide .gfold svg{transition:none}}
 .st-guide .gt{flex:1;display:flex;align-items:center;gap:12px;margin:0;font-size:clamp(21px,.9rem + .65vw,28px);line-height:1.2;font-weight:700}
 .st-guide .gt .ic{flex:none;width:46px;height:18px}
 .st-guide .gq{margin:0;font-size:clamp(17px,.85rem + .4vw,21px);line-height:1.45;font-weight:500}
@@ -1467,7 +1472,7 @@ var DEF={
  /* October 22, afternoon */
  'step.risk1':'Risk 1','step.risk2':'Risk 2',
  'next.move':'Move on to the next risk','next.movea':'Move on to the next risk: {r}','next.movef':'Move on to the next risk →',
- 'draw.start':'Start here','draw.head':'Connect the drivers to the risk',
+ 'draw.start':'Start here','draw.fold':'Fold this away','draw.unfold':'Show what to do','draw.head':'Connect the drivers to the risk',
  'draw.steps':'*Steps*\n*1.* Read your full risk description.\n*2.* Read the driver descriptions.\n*3.* Think about which drivers are connected to the risk, and drag them onto it.\n*4.* Add your own drivers that aren’t on the list.\n*5.* Talk about it with your group.',
  'draw.times':'*Timings*\n*First risk:* 10 minutes reading and drawing lines quietly, then 10 minutes talking.\n*Second risk:* 5 minutes thinking, then 10 minutes talking.',
  'phase.solo2':'On your own','phase.together2':'Together',
@@ -4313,8 +4318,16 @@ function renderGuide(){
   GUIDE.hidden=!show;GUIDE.innerHTML='';if(!show)return;
   var hb=el('button',{type:'button',cls:'ghb','aria-expanded':String(HELP),'aria-label':plain('draw.helpq'),title:plain('draw.helpq'),text:'?',
     onclick:function(e){e.stopPropagation();HELP=!HELP;renderGuide();if(!WD.moving&&!BUSY){layoutStage(0);drawLines();renderCard();}}});
+  /* October 24: a little arrow folds the panel down to its heading once people know what to do */
+  var fold=!!S.gfold;GUIDE.classList.toggle('folded',fold);
+  var fb=el('button',{type:'button',cls:'ghb gfold','aria-expanded':String(!fold),'aria-label':plain(fold?'draw.unfold':'draw.fold'),title:plain(fold?'draw.unfold':'draw.fold'),
+    onclick:function(e){e.stopPropagation();S.gfold=!S.gfold;if(S.gfold)HELP=false;save();renderGuide();if(!WD.moving&&!BUSY){layoutStage(0);drawLines();renderCard();}}});
+  var fs=svgEl('svg',{width:'16',height:'16',viewBox:'0 0 16 16','aria-hidden':'true'});
+  fs.appendChild(svgEl('path',{d:'M3 10 L8 5 L13 10',fill:'none',stroke:'currentColor','stroke-width':'2.4','stroke-linecap':'round','stroke-linejoin':'round'}));
+  fb.appendChild(fs);
   GUIDE.appendChild(T('span','draw.start',{cls:'gstart'}));
-  GUIDE.appendChild(el('div',{cls:'gh'},[el('h3',{cls:'gt'},[dragIconDark(),T('span','draw.head')]),hb]));
+  GUIDE.appendChild(el('div',{cls:'gh'},[el('h3',{cls:'gt'},[dragIconDark(),T('span','draw.head')]),fold?null:hb,fb].filter(Boolean)));
+  if(fold)return;
   /* October 23: five short lines, each with a bold lead-in (they replace the question and the "Your own" note) */
   var ul=el('ul',{cls:'gdo'});
   ['draw.do1','draw.do2','draw.do3','draw.do4','draw.do5'].forEach(function(k){var li=T('li',k);li.innerHTML=li.innerHTML.replace(/(^|[\s(“‘])_([^_\n<]+)_(?=[\s.,;:!?)”’]|$)/g,'$1<em>$2</em>');ul.appendChild(li);});
@@ -4613,4 +4626,10 @@ buildStage();bindP2();bindRoom();bindDx();render();
 .stage .lines .ln.sb{stroke-dasharray:none!important}
 </style>
 
+<style id="hubback-css">.hubback{display:inline-flex;align-items:center;gap:6px;flex:none;align-self:center;margin-right:16px;padding:5px 10px 5px 8px;border-radius:999px;border:1.5px solid currentColor;color:inherit;opacity:.8;font:600 13px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:0;text-transform:none;text-decoration:none;white-space:nowrap}.hubback:hover,.hubback:focus-visible{opacity:1}.hubback svg{flex:none}@media(max-width:600px){.hubback{margin-right:6px;padding:4px 5px;font-size:12px}.hubback .hbt{display:none}}</style>
+<script id="hubback">/* October 24: every activity links back to the weekend hub */
+(function(){try{var h=document.querySelector('header h1');if(!h||document.querySelector('.hubback'))return;
+var a=document.createElement('a');a.className='hubback';a.href='https://www.houseofthepeople.uk/session6';a.target='_top';a.setAttribute('aria-label','Back to all the weekend activities');a.title='Back to all the weekend activities';
+a.innerHTML='<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 2 L4 7 L9 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="hbt">All activities</span>';
+var at=h.parentNode.children.length===1&&h.parentNode.parentNode?h.parentNode:h;at.parentNode.insertBefore(a,at);}catch(e){}})();</script>
 </body></html>
