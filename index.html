@@ -1514,7 +1514,7 @@ function TV(){return {m:mins(),m2:mins()*2};}
 function plural(n){return n===1?'':'s';}
 
 /* ---------- state kept in this browser ---------- */
-var KEY='hotp-drivers-v4';
+var KEY='hotp-drivers-v5';
 function blankMap(){return {lines:[],pos:{},own:{}};}
 function blank(){return {room:'',cluster:'',step:0,maps:{},notes:{p1:'',p2:'',p3:''},timer:{solo:{left:null,end:null},together:{left:null,end:null},solo2:{left:null,end:null},together2:{left:null,end:null}},fin:{},example:false};}
 function example(){
@@ -3387,7 +3387,7 @@ var EXP=[
 ];
 function enterExample(){
   if(BUSY)return;
-  if(!S.example){try{localStorage.setItem('hotp-drivers-pre',JSON.stringify(S));}catch(e){}}
+  if(!S.example){try{localStorage.setItem('hotp-drivers-v5-pre',JSON.stringify(S));}catch(e){}}
   var s=blank();s.v=S.v;s.example=true;s.room=EXROOMN;s.focus=EXRISK;s.finished=true;s.firstAt=Date.now();
   s.stars={'O:Ox_ex-bilal_O1':1};s.notes.share='Could schools teach children how these apps make their money?';
   var m=blankMap(),L=function(d,str,eff){return {id:'me'+d,a:d,b:EXRISK,dir:'ab',str:str,eff:eff||''};};
@@ -3396,9 +3396,9 @@ function enterExample(){
   S=s;JOIN='';RF='';HL='';RSEL=null;save();go(stepIdx('room'));
 }
 function leaveExample(){
-  var p=null;try{p=JSON.parse(localStorage.getItem('hotp-drivers-pre')||'null');}catch(e){}
+  var p=null;try{p=JSON.parse(localStorage.getItem('hotp-drivers-v5-pre')||'null');}catch(e){}
   S=(p&&p.maps&&p.timer)?p:blank();S.example=false;if(!S.v)S.v=6;if(!S.fin)S.fin={};['solo','together','solo2','together2'].forEach(function(k){if(!S.timer[k])S.timer[k]={left:null,end:null};});
-  try{localStorage.removeItem('hotp-drivers-pre');}catch(e){}
+  try{localStorage.removeItem('hotp-drivers-v5-pre');}catch(e){}
   RF='';HL='';RSEL=null;save();go(0);
 }
 
@@ -4387,7 +4387,7 @@ function roomAfterLayout(W,wide){
      on this computer only, with no message. */
 var DRVBOARD='drv-s6';
 var DB=null,LIVE={},LIVEROOM=null,UNSUB=null,LIVEBAD=false,LIVEOK=false,WBAD=false,RETRY=null,WTIMER=null,SHAREON=false,LSTATE='',LRT=null,TOASTT=null;
-var BASE={},INFL={},FIRSTSEEN={},SHKEY='hotp-drivers-shared',DRVKEYS=DRIVERS.concat(OWN);
+var BASE={},INFL={},FIRSTSEEN={},SHKEY='hotp-drivers-v5-shared',DRVKEYS=DRIVERS.concat(OWN);
 try{
   var FBC=window.FIREBASE_CONFIG;
   if(window.firebase&&FBC&&FBC.projectId){
